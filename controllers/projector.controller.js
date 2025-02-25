@@ -12,7 +12,10 @@ export const addProjector = (req, res) => {
         `INSERT INTO projectors (name, cables, status) VALUES (?, ?, ?)`,
         [name, cables, status || "available"],
         function (err) {
-            if (err) return res.status(500).json({ message: "Erreur lors de l'ajout du projecteur" });
+            if (err) {
+                console.log("erreur: ", err);
+                return res.status(500).json({ message: "Erreur lors de l'ajout du projecteur" });
+            }
 
             res.status(201).json({ message: "Projecteur ajouté", id: this.lastID });
         }

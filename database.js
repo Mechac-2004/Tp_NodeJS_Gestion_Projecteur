@@ -1,13 +1,4 @@
-import sqlite3 from "sqlite3";
-
-// Création de la connexion SQLite
-const db = new sqlite3.Database("./projecteur.db", (err) => {
-  if (err) {
-    console.error("Erreur lors de la connexion à SQLite :", err.message);
-  } else {
-    console.log("Connexion réussie à la base de données SQLite !");
-  }
-});
+import db from "./config/db.config.js";
 
 // Création des tables nécessaires
 db.serialize(() => {
@@ -31,7 +22,7 @@ db.serialize(() => {
       id_projector INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       cables TEXT NOT NULL CHECK (cables IN ('HDMI', 'VGA')),
-      status TEXT NOT NULL DEFAULT 'available'
+      status TEXT NOT NULL CHECK (status IN ('available', 'reserved'))
     )
   `, (err) => {
     if (err) console.error("Erreur lors de la création de la table projectors :", err.message);
@@ -52,6 +43,9 @@ db.serialize(() => {
   `, (err) => {
     if (err) console.error("Erreur lors de la création de la table reservations :", err.message);
   });
+
+  console.log("Tables créées avec success !");
+  
 });
 
 export default db;

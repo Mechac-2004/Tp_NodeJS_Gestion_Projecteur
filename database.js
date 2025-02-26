@@ -1,13 +1,5 @@
 import sqlite3 from "sqlite3";
 
-// Création de la connexion SQLite
-const db = new sqlite3.Database("./projecteur.db", (err) => {
-  if (err) {
-    console.error("Erreur lors de la connexion à SQLite :", err.message);
-  } else {
-    console.log("Connexion réussie à la base de données SQLite !");
-  }
-});
 
 // Création des tables nécessaires
 db.serialize(() => {

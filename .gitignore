@@ -1,0 +1,5 @@
+# Fichier de config des variables d'environnement
+.env
+
+# Dossier node_modules
+node_modules/

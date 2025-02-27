@@ -2,7 +2,7 @@ import db from "../config/db.config.js";
 
 // Ajouter un projecteur
 export const addProjector = (name, cables, status, callback) => {
-    // requête sql pour l'insertion d'un projecteur
+  // requête sql pour l'insertion d'un projecteur
   const add_projector = `
     INSERT INTO projectors (name, cables, status) 
     VALUES (?, ?, ?)
@@ -14,7 +14,7 @@ export const addProjector = (name, cables, status, callback) => {
 
 // Récupérer tous les projecteurs
 export const getProjectors = (callback) => {
-    // requête sql pour sélectionner tous les projecteurs insérer 
+  // requête sql pour sélectionner tous les projecteurs insérer 
   const show_projector = "SELECT * FROM projectors";
   db.all(show_projector, [], (err, rows) => {
     callback(err, rows);
@@ -23,7 +23,7 @@ export const getProjectors = (callback) => {
 
 // Mettre à jour un projecteur
 export const updateProjector = (id_projector, name, cables, status, callback) => {
-    // requête sql pour modifier un projecteur spécifique
+  // requête sql pour modifier un projecteur spécifique
   const update_projector = `
     UPDATE projectors 
     SET name = ?, cables = ?, status = ? 
@@ -36,7 +36,7 @@ export const updateProjector = (id_projector, name, cables, status, callback) =>
 
 // Supprimer un projecteur
 export const deleteProjector = (id_projector, callback) => {
-    // requête sql pour supprimer un projecteur spécifique 
+  // requête sql pour supprimer un projecteur spécifique 
   const delete_projector = "DELETE FROM projectors WHERE id_projector = ?";
   db.run(delete_projector, [id_projector], function (err) {
     callback(err, this ? this.changes : null);

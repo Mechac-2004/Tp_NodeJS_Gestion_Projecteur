@@ -4,6 +4,7 @@ dotenv.config();
 
 const secretKey = process.env.JWT_SECRET;
 
+/* Middleware pour l'authorization des requetes */
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -21,6 +22,7 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
+/* Middleware pour la vérif des roles */
 const authorizeRole = (roles) => {
     return (req, res, next) => {
         if (!roles.includes(req.user.role)) {

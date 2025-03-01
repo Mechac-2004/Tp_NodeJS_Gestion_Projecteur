@@ -1,9 +1,9 @@
-
 import db from "./config/db.config.js";
 
 // Création des tables nécessaires
 db.serialize(() => {
-  // Table des utilisateurs
+
+  /* Table des utilisateurs */
   db.run(`
     CREATE TABLE IF NOT EXISTS users (
       id_user INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -17,7 +17,7 @@ db.serialize(() => {
     if (err) console.error("Erreur lors de la création de la table users :", err.message);
   });
 
-  // Table des projecteurs
+  /* Table des projecteurs */
   db.run(`
     CREATE TABLE IF NOT EXISTS projectors (
       id_projector INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,7 +29,7 @@ db.serialize(() => {
     if (err) console.error("Erreur lors de la création de la table projectors :", err.message);
   });
 
-  // Table des réservations
+  /* Table des réservations */
   db.run(`
     CREATE TABLE IF NOT EXISTS reservations (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

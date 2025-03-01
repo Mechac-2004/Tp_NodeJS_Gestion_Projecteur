@@ -1,6 +1,6 @@
 import db from "../config/db.config.js";
 
-// Ajout d'un nouveau projecteur
+/* Création d'un nouveau projecteur */
 export const addProjector = (req, res) => {
     const { name, cables, status } = req.body;
 
@@ -22,7 +22,7 @@ export const addProjector = (req, res) => {
     );
 };
 
-// Récupération de  tous les projecteurs
+/* Récupération de tous les projecteurs */
 export const getProjectors = (req, res) => {
     db.all(`SELECT * FROM projectors`, [], (err, rows) => {
         if (err) {
@@ -34,7 +34,7 @@ export const getProjectors = (req, res) => {
     });
 };
 
-// Mettre à jour un projecteur
+/* Mise à jour d'un projecteur */
 export const updateProjector = (req, res) => {
     const { id } = req.params;
     const { name, cables, status } = req.body;
@@ -50,7 +50,7 @@ export const updateProjector = (req, res) => {
     );
 };
 
-// Supprimer un projecteur
+/* Suppression d'un projecteur */
 export const deleteProjector = (req, res) => {
     const { id } = req.params;
 

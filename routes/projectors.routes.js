@@ -5,9 +5,9 @@ const { authenticateToken, authorizeRole } = authMiddleware;
 
 const router = express.Router();
 
-router.post("/", authenticateToken,  authorizeRole(['admin']), addProjector);
+router.post("/", authenticateToken,  authorizeRole(['administrateur']), addProjector);
 router.get("/", authenticateToken, getProjectors);
-router.put("/:id", authenticateToken, authorizeRole(['admin']),  updateProjector);
-router.delete("/:id", authenticateToken, authorizeRole(['admin']), deleteProjector);
+router.put("/:id", authenticateToken, authorizeRole(['administrateur']),  updateProjector);
+router.delete("/:id", authenticateToken, authorizeRole(['administrateur']), deleteProjector);
 
 export default router;

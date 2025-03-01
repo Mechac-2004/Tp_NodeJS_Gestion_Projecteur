@@ -3,10 +3,10 @@ import db from "../config/db.config.js";
 /* Réservation d'un projecteur */
 export const bookProjector = (req, res) => {
 
-    const { id_projector, date_reservation, start_time, end_time } = req.body;
+    const { projector_id, date_reservation, start_time, end_time } = req.body;
     const user_id = req.user.id;
 
-    if (!id_projector || !date_reservation || !start_time || !end_time) {
+    if (!projector_id || !date_reservation || !start_time || !end_time) {
         return res.status(400).json({ message: "Projecteur, date et heures requis" });
     }
 
@@ -32,7 +32,7 @@ export const bookProjector = (req, res) => {
     }
 
     // Vérification de la disponibilité du projecteur
-    db.get(`SELECT * FROM projectors WHERE id_projector = ?`, [id_projector ], (err, projector) => {
+    db.get(`SELECT * FROM projectors WHERE id_projector = ?`, [projector_id ], (err, projector) => {
         if (err) {
             console.error("Erreur SQL :", err);
             return res.status(500).json({ message: "Erreur interne" });
@@ -47,9 +47,9 @@ export const bookProjector = (req, res) => {
         // Vérifier si le projecteur est déjà réservé sur ce créneau
         db.get(
             `SELECT * FROM reservations 
-             WHERE id_projector = ? AND date_reservation = ? 
+             WHERE projector_id = ? AND date_reservation = ? 
              AND ((start_time <= ? AND end_time > ?) OR (start_time < ? AND end_time >= ?))`,
-            [id_projector, date_reservation, start_time, start_time, end_time, end_time],
+            [projector_id, date_reservation, start_time, start_time, end_time, end_time],
             (err, existingReservation) => {
                 if (err) {
                     console.error("Erreur SQL :", err);
@@ -62,9 +62,9 @@ export const bookProjector = (req, res) => {
 
                 // Enregistrement de la réservation
                 db.run(
-                    `INSERT INTO reservations (user_id, id_projector, date_reservation, start_time, end_time) 
+                    `INSERT INTO reservations (user_id, projector_id, date_reservation, start_time, end_time) 
                      VALUES (?, ?, ?, ?, ?)`,
-                    [user_id, id_projector, date_reservation, start_time, end_time],
+                    [user_id, projector_id, date_reservation, start_time, end_time],
                     function (err) {
                         if (err) {
                             console.error("Erreur SQL :", err);
@@ -74,7 +74,7 @@ export const bookProjector = (req, res) => {
                         // Rendre ce projecteur indisponible
                         db.run(
                             `UPDATE projectors SET status = 'reserved' WHERE id_projector = ?`,
-                            [id_projector]
+                            [projector_id]
                         );
 
                         res.status(201).json({ message: "Réservation confirmée", id_reservation: this.lastID });
@@ -108,17 +108,13 @@ export const cancelReservation = (req, res) => {
                 [reservation.id_projector]
             );
             
-            res.json({ message: "Réservation annulée", id_reservation: this.lastID });
+            res.json({ message: "Réservation annulée", id_reservation: id });
         });
     });
 };
 
 /* Voir toutes les réservations */
 export const getAllReservations = (req, res) => {
-    if (req.user.role !== "administrateur") {
-        return res.status(403).json({ message: "Accès refusé" });
-    }
-
     db.all(`SELECT * FROM reservations`, [], (err, rows) => {
         if (err) return res.status(500).json({ message: "Erreur lors de la récupération" });
 

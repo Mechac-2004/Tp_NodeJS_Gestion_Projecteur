@@ -11,7 +11,7 @@ const SECRET_KEY = process.env.JWT_SECRET || "secret";
 export const register = (req, res) => {
     const { nom, prenom, email, password, role } = req.body;
 
-    // On vérifie si cet user est déjà inscrit
+    // Vérification de l'existence auparavant de l'user
     db.get("SELECT * FROM users WHERE email = ?", [email], async (err, user) => {
         if (err) {
             console.log("Erreur ", err);
@@ -20,7 +20,7 @@ export const register = (req, res) => {
         }
         if (user) return res.status(400).json({ message: "Email déjà utilisé." });
 
-        // On hashe le password puis on enregistre l'user
+        // Hashage du password et enregistrement de l'user
         const hashedPassword = await bcrypt.hash(password, 10);
 
         db.run(
@@ -42,16 +42,16 @@ export const register = (req, res) => {
 export const login = (req, res) => {
     const { email, password } = req.body;
 
-    // On vérifie si l'user existe
+    // Vérification de l'exitsence d'un user avec ces credientials
     db.get("SELECT * FROM users WHERE email = ?", [email], async (err, user) => {
         if (err) return res.status(500).json({ message: "Erreur serveur." });
         if (!user) return res.status(401).json({ message: "Identifiants incorrects." });
 
-        // On vérifie si le password de l'user est correct
+        // Vérification du password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(401).json({ message: "Identifiants incorrects." });
 
-        // On génére le token JWT
+        // Génération du token
         const token = jwt.sign({ id: user.id_user, role: user.role }, SECRET_KEY, { expiresIn: "1h" });
 
         res.json({ message: "Utilisateur connecté !", token });

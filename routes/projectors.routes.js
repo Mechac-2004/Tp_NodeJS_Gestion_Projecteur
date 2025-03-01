@@ -1,49 +1,13 @@
 import express from "express";
-const router = express.Router();
+import { addProjector, getProjectors, updateProjector, deleteProjector } from "../controllers/projector.controller.js";
 import authMiddleware from "../middleware/auth.middleware.js";
 const { authenticateToken, authorizeRole } = authMiddleware;
 
-router.post('/', authenticateToken, authorizeRole(['admin']), async (req, res) => {
-    try {
-        const { name } = req.body;
-        await db.query('INSERT INTO projectors (name) VALUES (?)', [name]);
-        res.status(201).json({ message: 'Projecteur ajouté avec succès' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Erreur lors de l\'ajout du projecteur' });
-    }
-});
-router.get('/', authenticateToken, async (req, res) => {
-    try {
-        const [rows] = await db.query('SELECT * FROM projectors');
-        res.json(rows);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Erreur lors de la récupération des projecteurs' });
-    }
-});
+const router = express.Router();
 
-router.put('/:id', authenticateToken, authorizeRole(['admin']), async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { status } = req.body;
-        await db.query('UPDATE projectors SET status = ? WHERE id = ?', [status, id]);
-        res.json({ message: 'État du projecteur mis à jour avec succès' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'état du projecteur' });
-    }
-});
-
-router.delete('/:id', authenticateToken, authorizeRole(['admin']), async (req, res) => {
-    try {
-        const { id } = req.params;
-        await db.query('DELETE FROM projectors WHERE id = ?', [id]);
-        res.json({ message: 'Projecteur supprimé avec succès' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Erreur lors de la suppression du projecteur' });
-    }
-});
+router.post("/", authenticateToken,  authorizeRole(['admin']), addProjector);
+router.get("/", authenticateToken, getProjectors);
+router.put("/:id", authenticateToken, authorizeRole(['admin']),  updateProjector);
+router.delete("/:id", authenticateToken, authorizeRole(['admin']), deleteProjector);
 
 export default router;

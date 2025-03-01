@@ -1,9 +1,9 @@
-const express = require('express');
+import express from "express";
 const router = express.Router();
-const authenticateToken = require('../middleware/auth.middleware.js');
-const authorizeRole = require('../middleware/auth.middleware.js');
+import authMiddleware from "../middleware/auth.middleware.js";
+const { authenticateToken, authorizeRole } = authMiddleware;
 
-router.post('/', authenticateToken, authenticateToken, authorizeRole(['admin']), async (req, res) => {
+router.post('/', authenticateToken, authorizeRole(['admin']), async (req, res) => {
     try {
         const { name } = req.body;
         await db.query('INSERT INTO projectors (name) VALUES (?)', [name]);
@@ -46,4 +46,4 @@ router.delete('/:id', authenticateToken, authorizeRole(['admin']), async (req, r
     }
 });
 
-module.exports = router;
+export default router;

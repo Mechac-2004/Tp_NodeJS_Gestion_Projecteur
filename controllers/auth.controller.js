@@ -31,7 +31,7 @@ export const register = (req, res) => {
                     console.log("Erreur lors de l'ajout de l'utilisateur dans la base de données :", err);
                     return res.status(500).json({ message: "Erreur lors de l'inscription." });
                 } else {
-                    res.status(201).json({ message: "Inscription réussie !" });
+                    res.status(201).json({ message: "Utilisateur enregistré." });
                 }
             }
         );
@@ -54,6 +54,6 @@ export const login = (req, res) => {
         // On génére le token JWT
         const token = jwt.sign({ id: user.id_user, role: user.role }, SECRET_KEY, { expiresIn: "1h" });
 
-        res.json({ message: "Connexion réussie !", token });
+        res.json({ message: "Utilisateur connecté !", token });
     });
 };
